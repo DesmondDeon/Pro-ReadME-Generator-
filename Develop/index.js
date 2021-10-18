@@ -2,7 +2,6 @@
 const fs = require("fs");
 const axios = require('axios');
 const inquirer = require("inquirer");
-const markdown = require("./utils/generateMarkdown.js");
 const generateMarkdown = require("./utils/generateMarkdown.js");
 
 // TODO: Create an array of questions for user input
@@ -53,12 +52,12 @@ const questions = [
     ];
 
 // TODO: Create a function to write README file
-const createNewFile = ReadMeFile => {
-    return new Promise ((worked, error) => {
-            fs.writeFile(`./${filename.toLowercase().split(' ').join('')}.md`,data,()=>{
+const createNewFile = data => {
+    return new Promise ((worked, issue) => {
+            fs.writeFile(`./${filename.toLowercase().split(' ').join('')}.md`, data , err =>{
                 if(err){
                     // console.log(err)
-                    error(err);
+                    issue(err);
                     return;
                 }
 
@@ -67,7 +66,8 @@ const createNewFile = ReadMeFile => {
                 message: 'Your ReadME is Ready!'
             });
         });
-    },
+    });
+};
 
 // TODO: Create a function to initialize app
 function init() {
@@ -76,11 +76,11 @@ function init() {
         console.log("Making ReadMe");
         fs.writeFileSync("ReadMe.md", inquirerResponse, data);
     })
-    .then(ReadMeFile => {
-        return generateMarkdown(ReadMeFile)
+    .then(data => {
+        return generateMarkdown(data)
     })
-    .then(ReadMeFile => {
-        return createNewFile(ReadMeFile)
+    .then(data => {
+        return createNewFile(data)
     })
     .catch((err) => {
         console.log(err);
