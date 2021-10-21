@@ -1,6 +1,5 @@
 // TODO: Include packages needed for this application
 const fs = require("fs");
-const axios = require('axios');
 const inquirer = require("inquirer");
 const generateMarkdown = require("./utils/generateMarkdown.js");
 
@@ -9,19 +8,33 @@ const questions = [
         {
             type: 'input',
             message: 'What is the name of the Repository?',
-            name: 'name',
+            name: 'title',
             validate: (value) => {if(value){return true}else{return 'Please Name This Repository'}},
         },
         {
             type: 'input',
-            message: 'Why did you build this Repository?',
-            description: 'description',
+            message: 'Please describe your Repo?',
+            name: "description", 
             validate: (value) => {if(value){return true}else{return 'Please Describe This Project'}},
         },
         {
             type: 'input',
+            message: 'What are the steps required to install your project?',
+            name: "Installation", 
+            validate: (value) => {if(value){return true}else{return 'What are the steps required to install your project?'}},
+
+        },
+        {
+            type: 'input',
+            message: 'How do you Use this Application?',
+            name: "Usage", 
+            validate: (value) => {if(value){return true}else{return 'Please Describe This Project'}},
+
+        },
+        {
+            type: 'input',
             message: 'What is your Git Username?',
-            name: 'github username',
+            name: 'github',
             validate: (value) => {if(value){return true}else{return 'I need this value to continue '}},
         },
         {
@@ -33,17 +46,17 @@ const questions = [
         {
             type: 'input',
             message: 'Who contributed to this repository?',
-            name: 'contributers',
+            name: 'contributing',
             validate: (value) => {if(value){return true}else{return 'Desmond Young'}},
         },
         {
             type: 'input',
-            message: 'Which Respositories are simular? and Why?',
-            name: 'works',
+            message: 'How did you test this Product?',
+            name: 'test',
             validate: (value) => {if(value){return true}else{return 'Please list names of Repositories'}},
         },
         {
-            type: 'checkbox',
+            type: 'list',
             message: 'Which Licenses did you use? ',
             name: 'licenses',
             choices: ['MIT','GPLv3','Apache 2.0', 'GPL'],
@@ -72,15 +85,10 @@ const createNewFile = data => {
 // TODO: Create a function to initialize app
 function init() {
     inquirer.prompt(questions)
-    .then((inquirerResponse, data) => {
-        console.log("Making ReadMe");
-        fs.writeFileSync("ReadMe.md", inquirerResponse, data);
-    })
-    .then(data => {
-        return generateMarkdown(data)
-    })
-    .then(data => {
-        return createNewFile(data)
+    .then(( data) => {
+        console.log("Making ReadMe")
+       const ReadMeBody = generateMarkdown(data)
+         fs.writeFileSync("ReadMe.md", ReadMeBody);
     })
     .catch((err) => {
         console.log(err);
